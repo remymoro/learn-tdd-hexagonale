@@ -8,9 +8,10 @@ datasource db {
 }
 
 model Tweet {
-  id       String @id
-  content  String
-  authorId String
+  id        String    @id
+  content   String
+  authorId  String
+  deletedAt DateTime?
 
   @@map("tweets")
 }

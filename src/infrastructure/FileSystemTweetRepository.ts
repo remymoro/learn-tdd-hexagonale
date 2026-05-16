@@ -10,58 +10,61 @@ export class FileSystemTweetRepository implements TweetRepository {
   constructor(private readonly filePath: string = path.join(process.cwd(), 'data', 'tweets.json')) { }
 
   async save(tweet: Tweet): Promise<void> {
-    const tweets = await this.getAllTweets();
-    tweets.push(tweet);
-
-    await this.writeTweets(tweets);
+    const all = await this.readAll();
+    all.push(tweet);
+    await this.writeAll(all);
   }
 
-  // Méthode utilitaire pour lire le fichier (interne ou utilisée pour les tests)
-  async getAllTweets(): Promise<Tweet[]> {
-    try {
-      const data = await fs.readFile(this.filePath, 'utf-8');
-      const parsedData = JSON.parse(data);
-
-      // On re-transforme les données brutes en instances de l'entité Tweet
-      return parsedData.map((item: any) =>
-        Tweet.reconstitute(
-          TweetId.fromJSON(item.id),
-          Message.fromJSON(item.content),
-          AuthorId.fromJSON(item.authorId)
-        )
-      );
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
-        // Le fichier n'existe pas encore, on retourne un tableau vide
-        return [];
-      }
-      throw error;
+  async update(tweet: Tweet): Promise<void> {
+    const all = await this.readAll();
+    const index = all.findIndex(t => t.id === tweet.id);
+    if (index !== -1) {
+      all[index] = tweet;
+      await this.writeAll(all);
     }
   }
 
   async findById(id: string): Promise<Tweet | null> {
-    const tweets = await this.getAllTweets();
-    return tweets.find(t => t.id === id) || null;
+    const all = await this.readAll();
+    return all.find(t => t.id === id) ?? null;
   }
 
-  async update(tweet: Tweet): Promise<void> {
-    const tweets = await this.getAllTweets();
-    const index = tweets.findIndex(t => t.id === tweet.id);
-    if (index !== -1) {
-      tweets[index] = tweet;
-      await this.writeTweets(tweets);
+  async findPublishedTweetsByAuthor(authorId: string): Promise<Tweet[]> {
+    const published = await this.getAllTweets();
+    return published.filter(t => t.authorId === authorId);
+  }
+
+  async findPublishedTweetsByAuthors(authorIds: string[]): Promise<Tweet[]> {
+    const published = await this.getAllTweets();
+    return published.filter(t => authorIds.includes(t.authorId));
+  }
+
+  async getAllTweets(): Promise<Tweet[]> {
+    const all = await this.readAll();
+    return all.filter(t => !t.isDeleted);
+  }
+
+  private async readAll(): Promise<Tweet[]> {
+    try {
+      const data = await fs.readFile(this.filePath, 'utf-8');
+      const parsedData = JSON.parse(data);
+
+      return parsedData.map((item: any) =>
+        Tweet.reconstitute(
+          TweetId.fromJSON(item.id),
+          Message.fromJSON(item.content),
+          AuthorId.fromJSON(item.authorId),
+          item.deletedAt ? new Date(item.deletedAt) : null
+        )
+      );
+    } catch (error: any) {
+      if (error.code === 'ENOENT') return [];
+      throw error;
     }
   }
 
-  async deleteById(id: string): Promise<void> {
-    const tweets = await this.getAllTweets();
-    const filteredTweets = tweets.filter(t => t.id !== id);
-    await this.writeTweets(filteredTweets);
-  }
-
-  private async writeTweets(tweets: Tweet[]): Promise<void> {
+  private async writeAll(tweets: Tweet[]): Promise<void> {
     await fs.mkdir(path.dirname(this.filePath), { recursive: true });
     await fs.writeFile(this.filePath, JSON.stringify(tweets, null, 2), 'utf-8');
   }
-
 }

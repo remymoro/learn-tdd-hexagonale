@@ -7,8 +7,9 @@ import { UpdateTweetUseCase } from '@application/tweet/update/UpdateTweetUseCase
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase';
 import { ViewWallUseCase } from '@application/tweet/wall/ViewWallUseCase';
 import { TweetApiPresenter } from './presenters/TweetApiPresenter';
-import { TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors';
+import { TweetAlreadyDeletedError, TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors';
 import { UserAlreadyFollowsError } from '@domain/user/UserErrors';
+import { DeleteTweetUseCase } from '@application/tweet/delete/DeleteTweetUseCase';
 
 const tweetRepository = new PrismaTweetRepository();
 const followRepository = new PrismaFollowRepository();
@@ -16,6 +17,7 @@ const followRepository = new PrismaFollowRepository();
 const publishTweetUseCase = new PublishTweetUseCase(tweetRepository);
 const viewTimelineUseCase = new ViewTimelineUseCase(tweetRepository);
 const updateTweetUseCase = new UpdateTweetUseCase(tweetRepository);
+const deleteTweetUseCase = new DeleteTweetUseCase(tweetRepository);
 const followUserUseCase = new FollowUserUseCase(followRepository);
 const viewWallUseCase = new ViewWallUseCase(tweetRepository, followRepository);
 
@@ -45,6 +47,20 @@ app.put('/tweets/:id', async (request, reply) => {
     if (result.error instanceof UnauthorizedError) {
       return reply.status(403).send({ error: result.error.message });
     }
+  }
+
+  reply.status(204).send();
+});
+
+app.delete('/tweets/:id', async (request, reply) => {
+  const { id } = request.params as { id: string };
+  const { authorId } = request.body as { authorId: string };
+  const result = await deleteTweetUseCase.execute({ id, authorId });
+
+  if (!result.success) {
+    if (result.error instanceof TweetNotFoundError)       return reply.status(404).send({ error: result.error.message });
+    if (result.error instanceof TweetAlreadyDeletedError) return reply.status(410).send({ error: result.error.message });
+    if (result.error instanceof UnauthorizedError)        return reply.status(403).send({ error: result.error.message });
   }
 
   reply.status(204).send();

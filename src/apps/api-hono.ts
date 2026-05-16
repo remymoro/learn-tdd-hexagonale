@@ -9,8 +9,10 @@ import { UpdateTweetUseCase } from '@application/tweet/update/UpdateTweetUseCase
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
 import { ViewWallUseCase } from '@application/tweet/wall/ViewWallUseCase'
 import { TweetApiPresenter } from './presenters/TweetApiPresenter'
-import { TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors'
+import { TweetAlreadyDeletedError, TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors'
 import { UserAlreadyFollowsError } from '@domain/user/UserErrors'
+import { DeleteTweetUseCase } from '@application/tweet/delete/DeleteTweetUseCase'
+import { match } from '@shared/Result'
 
 const tweetRepository = new PrismaTweetRepository()
 const followRepository = new PrismaFollowRepository()
@@ -18,6 +20,7 @@ const followRepository = new PrismaFollowRepository()
 const publishTweetUseCase = new PublishTweetUseCase(tweetRepository)
 const viewTimelineUseCase = new ViewTimelineUseCase(tweetRepository)
 const updateTweetUseCase = new UpdateTweetUseCase(tweetRepository)
+const deleteTweetUseCase = new DeleteTweetUseCase(tweetRepository)
 const followUserUseCase = new FollowUserUseCase(followRepository)
 const viewWallUseCase = new ViewWallUseCase(tweetRepository, followRepository)
 
@@ -42,16 +45,30 @@ app.put('/tweets/:id', async (c) => {
   const { message, authorId } = await c.req.json<{ message: string; authorId: string }>()
   const result = await updateTweetUseCase.execute({ id, message, authorId })
 
-  if (!result.success) {
-    if (result.error instanceof TweetNotFoundError) {
-      return c.json({ error: result.error.message }, 404)
+  return match(result, {
+    ok:  (): Response => c.body(null, 204),
+    err: (error): Response => {
+      if (error instanceof TweetNotFoundError) return c.json({ error: error.message }, 404)
+      if (error instanceof UnauthorizedError)  return c.json({ error: error.message }, 403)
+      return c.json({ error: 'Internal server error' }, 500)
     }
-    if (result.error instanceof UnauthorizedError) {
-      return c.json({ error: result.error.message }, 403)
-    }
-  }
+  })
+})
 
-  return c.body(null, 204)
+app.delete('/tweets/:id', async (c) => {
+  const id = c.req.param('id')
+  const { authorId } = await c.req.json<{ authorId: string }>()
+  const result = await deleteTweetUseCase.execute({ id, authorId })
+
+  return match(result, {
+    ok:  (): Response => c.body(null, 204),
+    err: (error): Response => {
+      if (error instanceof TweetNotFoundError)       return c.json({ error: error.message }, 404)
+      if (error instanceof TweetAlreadyDeletedError) return c.json({ error: error.message }, 410)
+      if (error instanceof UnauthorizedError)        return c.json({ error: error.message }, 403)
+      return c.json({ error: 'Internal server error' }, 500)
+    }
+  })
 })
 
 // ─── Follows ─────────────────────────────────────────────────────────────────

@@ -6,17 +6,20 @@ export class Tweet {
   constructor(
     message: string | Message,
     author: string | AuthorId,
-    tweetId: string | TweetId = TweetId.generate()
+    tweetId: string | TweetId = TweetId.generate(),
+    deletedAt: Date | null = null
   ) {
     this.message = message instanceof Message ? message : new Message(message)
     this.author = author instanceof AuthorId ? author : new AuthorId(author)
     this.tweetId = tweetId instanceof TweetId ? tweetId : new TweetId(tweetId)
+    this.deletedAt = deletedAt
     Object.freeze(this)
   }
 
   private readonly tweetId: TweetId
   private readonly message: Message
   private readonly author: AuthorId
+  private readonly deletedAt: Date | null
 
   // Création d'un nouveau Tweet
   static create(
@@ -31,14 +34,23 @@ export class Tweet {
   static reconstitute(
     tweetId: TweetId,
     message: Message,
-    author: AuthorId
+    author: AuthorId,
+    deletedAt: Date | null = null
   ): Tweet {
-    return new Tweet(message, author, tweetId)
+    return new Tweet(message, author, tweetId, deletedAt)
   }
 
   withContent(message: string | Message): Tweet {
-    return new Tweet(message, this.author, this.tweetId)
+    return new Tweet(message, this.author, this.tweetId, this.deletedAt)
   }
+
+  markAsDeleted(at: Date): Tweet {
+    return new Tweet(this.message, this.author, this.tweetId, at)
+  }
+
+  get isDeleted(): boolean { return this.deletedAt !== null }
+
+  getDeletedAt(): Date | null { return this.deletedAt }
 
   getMessage(): string {
     return this.message.value
@@ -60,7 +72,8 @@ export class Tweet {
     return {
       id: this.tweetId.toJSON(),
       content: this.message.toJSON(),
-      authorId: this.author.toJSON()
+      authorId: this.author.toJSON(),
+      deletedAt: this.deletedAt?.toISOString() ?? null
     }
   }
 

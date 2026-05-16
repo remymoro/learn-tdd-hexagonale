@@ -22,6 +22,9 @@ class FakeTweetRepository implements TweetRepository {
     return this.tweet
   }
 
+  async findPublishedTweetsByAuthor(_authorId: string): Promise<Tweet[]> { return [] }
+  async findPublishedTweetsByAuthors(_authorIds: string[]): Promise<Tweet[]> { return [] }
+
   async getAllTweets(): Promise<Tweet[]> {
     return this.tweet ? [this.tweet] : []
   }

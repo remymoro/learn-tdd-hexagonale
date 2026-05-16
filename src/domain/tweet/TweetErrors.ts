@@ -11,3 +11,10 @@ export class UnauthorizedError extends Error {
     this.name = 'UnauthorizedError'
   }
 }
+
+export class TweetAlreadyDeletedError extends Error {
+  constructor() {
+    super('Tweet already deleted')
+    this.name = 'TweetAlreadyDeletedError'
+  }
+}

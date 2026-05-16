@@ -98,6 +98,7 @@ describe('FileSystemTweetRepository', () => {
         id: tweet.id,
         content: tweet.content,
         authorId: tweet.authorId,
+        deletedAt: null,
       },
     ]);
   });
@@ -164,7 +165,7 @@ describe('FileSystemTweetRepository', () => {
     expect(savedTweets[0]?.content).toBe(tweet.content);
   });
 
-  it('should delete a tweet by its id', async () => {
+  it('should exclude a soft-deleted tweet from getAllTweets', async () => {
     // Arrange
     const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
     const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'), new TweetId(TWEET_ID_2));
@@ -172,7 +173,7 @@ describe('FileSystemTweetRepository', () => {
     await repository.save(tweet2);
 
     // Act
-    await repository.deleteById(tweet1.id);
+    await repository.update(tweet1.markAsDeleted(new Date()));
 
     // Assert
     const savedTweets = await repository.getAllTweets();
@@ -180,17 +181,16 @@ describe('FileSystemTweetRepository', () => {
     expect(savedTweets[0]?.id).toBe(tweet2.id);
   });
 
-  it('should keep tweets unchanged when deleting an unknown tweet id', async () => {
+  it('should still find a soft-deleted tweet by id', async () => {
     // Arrange
-    const tweet = Tweet.create(new Message('Tweet existant'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
+    const tweet = Tweet.create(new Message('Tweet supprimé'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
     await repository.save(tweet);
 
     // Act
-    await repository.deleteById(UNKNOWN_TWEET_ID);
+    await repository.update(tweet.markAsDeleted(new Date()));
 
     // Assert
-    const savedTweets = await repository.getAllTweets();
-    expect(savedTweets).toHaveLength(1);
-    expect(savedTweets[0]?.id).toBe(tweet.id);
+    const found = await repository.findById(tweet.id);
+    expect(found?.isDeleted).toBe(true);
   });
 });

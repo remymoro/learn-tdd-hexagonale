@@ -21,15 +21,13 @@ export class ViewWallUseCase {
       return []
     }
 
-    const followedIds = followedUserIds.map(followedUserId => followedUserId.value)
-    const tweets = await this.tweetRepository.getAllTweets()
+    const followedIds = followedUserIds.map(id => id.value)
+    const tweets = await this.tweetRepository.findPublishedTweetsByAuthors(followedIds)
 
-    return tweets
-      .filter(tweet => followedIds.includes(tweet.authorId))
-      .map(tweet => ({
-        id: tweet.getTweetId(),
-        content: tweet.getMessage(),
-        authorId: tweet.getAuthorId(),
-      }))
+    return tweets.map(tweet => ({
+      id: tweet.getTweetId(),
+      content: tweet.getMessage(),
+      authorId: tweet.getAuthorId(),
+    }))
   }
 }

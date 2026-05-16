@@ -9,13 +9,11 @@ export class ViewTimelineUseCase {
   constructor(private readonly tweetRepository: TweetRepository) {}
 
   async execute(query?: ViewTimelineQuery): Promise<ViewTimelineResponse[]> {
-    const tweets = await this.tweetRepository.getAllTweets()
+    const tweets = query?.authorId
+      ? await this.tweetRepository.findPublishedTweetsByAuthor(query.authorId)
+      : await this.tweetRepository.getAllTweets()
 
-    const filtered = query?.authorId
-      ? tweets.filter(tweet => tweet.authorId === query.authorId)
-      : tweets
-
-    return filtered.map(tweet => ({
+    return tweets.map(tweet => ({
       id: tweet.getTweetId(),
       content: tweet.getMessage(),
       authorId: tweet.getAuthorId(),

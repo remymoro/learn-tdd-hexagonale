@@ -28,18 +28,21 @@ export type TweetMinAggregateOutputType = {
   id: string | null
   content: string | null
   authorId: string | null
+  deletedAt: Date | null
 }
 
 export type TweetMaxAggregateOutputType = {
   id: string | null
   content: string | null
   authorId: string | null
+  deletedAt: Date | null
 }
 
 export type TweetCountAggregateOutputType = {
   id: number
   content: number
   authorId: number
+  deletedAt: number
   _all: number
 }
 
@@ -48,18 +51,21 @@ export type TweetMinAggregateInputType = {
   id?: true
   content?: true
   authorId?: true
+  deletedAt?: true
 }
 
 export type TweetMaxAggregateInputType = {
   id?: true
   content?: true
   authorId?: true
+  deletedAt?: true
 }
 
 export type TweetCountAggregateInputType = {
   id?: true
   content?: true
   authorId?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -139,6 +145,7 @@ export type TweetGroupByOutputType = {
   id: string
   content: string
   authorId: string
+  deletedAt: Date | null
   _count: TweetCountAggregateOutputType | null
   _min: TweetMinAggregateOutputType | null
   _max: TweetMaxAggregateOutputType | null
@@ -166,12 +173,14 @@ export type TweetWhereInput = {
   id?: Prisma.StringFilter<"Tweet"> | string
   content?: Prisma.StringFilter<"Tweet"> | string
   authorId?: Prisma.StringFilter<"Tweet"> | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Tweet"> | Date | string | null
 }
 
 export type TweetOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type TweetWhereUniqueInput = Prisma.AtLeast<{
@@ -181,12 +190,14 @@ export type TweetWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TweetWhereInput | Prisma.TweetWhereInput[]
   content?: Prisma.StringFilter<"Tweet"> | string
   authorId?: Prisma.StringFilter<"Tweet"> | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Tweet"> | Date | string | null
 }, "id">
 
 export type TweetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TweetCountOrderByAggregateInput
   _max?: Prisma.TweetMaxOrderByAggregateInput
   _min?: Prisma.TweetMinOrderByAggregateInput
@@ -199,70 +210,85 @@ export type TweetScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Tweet"> | string
   content?: Prisma.StringWithAggregatesFilter<"Tweet"> | string
   authorId?: Prisma.StringWithAggregatesFilter<"Tweet"> | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tweet"> | Date | string | null
 }
 
 export type TweetCreateInput = {
   id: string
   content: string
   authorId: string
+  deletedAt?: Date | string | null
 }
 
 export type TweetUncheckedCreateInput = {
   id: string
   content: string
   authorId: string
+  deletedAt?: Date | string | null
 }
 
 export type TweetUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TweetUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TweetCreateManyInput = {
   id: string
   content: string
   authorId: string
+  deletedAt?: Date | string | null
 }
 
 export type TweetUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TweetUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TweetCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TweetMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TweetMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 
@@ -271,27 +297,31 @@ export type TweetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   content?: boolean
   authorId?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["tweet"]>
 
 export type TweetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
   authorId?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["tweet"]>
 
 export type TweetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
   authorId?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["tweet"]>
 
 export type TweetSelectScalar = {
   id?: boolean
   content?: boolean
   authorId?: boolean
+  deletedAt?: boolean
 }
 
-export type TweetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "authorId", ExtArgs["result"]["tweet"]>
+export type TweetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "authorId" | "deletedAt", ExtArgs["result"]["tweet"]>
 
 export type $TweetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Tweet"
@@ -300,6 +330,7 @@ export type $TweetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: string
     content: string
     authorId: string
+    deletedAt: Date | null
   }, ExtArgs["result"]["tweet"]>
   composites: {}
 }
@@ -726,6 +757,7 @@ export interface TweetFieldRefs {
   readonly id: Prisma.FieldRef<"Tweet", 'String'>
   readonly content: Prisma.FieldRef<"Tweet", 'String'>
   readonly authorId: Prisma.FieldRef<"Tweet", 'String'>
+  readonly deletedAt: Prisma.FieldRef<"Tweet", 'DateTime'>
 }
     
 
