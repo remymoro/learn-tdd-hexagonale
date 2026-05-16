@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { FileSystemTweetRepository } from './infrastructure/FileSystemTweetRepository';
 import { PublishTweetUseCase } from '@application/tweet/PublishTweetUseCase';
 import { ViewTimelineUseCase } from '@application/tweet/ViewTimelineUseCase';
 import { UpdateTweetUseCase } from '@application/tweet/UpdateTweetUseCase';
+import { FileSystemTweetRepository } from '@infrastructure/FileSystemTweetRepository';
 
 // Initialisation des dépendances (Injection de dépendance manuelle)
 // Dans une vraie application, on utiliserait un conteneur (IoC) ou un fichier de composition.

@@ -7,7 +7,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "vitest run --reporter=verbose src/infrastructure/*.integration.spec.ts",
-    "cli": "tsx src/cli.ts"
+    "cli": "tsx src/apps/cli.ts",
+    "build": "esbuild src/apps/cli.ts --bundle --platform=node --format=cjs --outfile=dist/cli.cjs --tsconfig=tsconfig.json --banner:js=\"#!/usr/bin/env node\"",
+    "postbuild": "chmod +x dist/cli.cjs"
+  },
+  "bin": {
+    "twitter-cli": "./dist/cli.cjs"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +22,7 @@
     "@testcontainers/postgresql": "^11.14.0",
     "@types/node": "^25.8.0",
     "@types/pg": "^8.20.0",
+    "esbuild": "^0.28.0",
     "prisma": "^7.8.0",
     "testcontainers": "^11.14.0",
     "tsx": "^4.22.0",

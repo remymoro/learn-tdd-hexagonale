@@ -23,5 +23,35 @@
     "id": "81a14c17-2f42-438b-9615-6fe222e7600e",
     "content": "remy",
     "authorId": "user-123"
+  },
+  {
+    "id": "c0550680-d125-4932-8bea-96ee9051dbca",
+    "content": "Ce tweet persiste dans un fichier !",
+    "authorId": "fs-user"
+  },
+  {
+    "id": "87b8dc8c-eb0b-4f8b-882f-f7bf3d9a22b6",
+    "content": "Ce tweet persiste dans un fichier !",
+    "authorId": "fs-user"
+  },
+  {
+    "id": "17d70095-e9b1-40ae-91ba-450710d1d58c",
+    "content": "Ce tweet persiste dans un fichier !",
+    "authorId": "fs-user"
+  },
+  {
+    "id": "1821b9ba-c5f7-45cc-b565-464603c546f0",
+    "content": "Hello depuis le binaire !",
+    "authorId": "alice"
+  },
+  {
+    "id": "404b4929-08db-45a5-a72c-73585980c986",
+    "content": "Hello world",
+    "authorId": "alice"
+  },
+  {
+    "id": "8ad615c1-f94f-4989-a2db-962c521da5d6",
+    "content": "Hello world",
+    "authorId": "alice"
   }
 ]
