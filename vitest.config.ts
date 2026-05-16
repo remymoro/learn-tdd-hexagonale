@@ -6,7 +6,8 @@ export default defineConfig({
       '@domain': '/src/domain',
       '@application': '/src/application',
       '@infrastructure': '/src/infrastructure',
-      '@tests': '/src/tests'
+      '@tests': '/src/tests',
+      '@shared': '/src/shared'
     }
   }
 });

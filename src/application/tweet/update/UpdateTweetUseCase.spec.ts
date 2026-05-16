@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { UpdateTweetUseCase } from './UpdateTweetUseCase'
 import { Tweet } from '@domain/tweet/Tweet'
 import { TweetRepository } from '@application/ports/TweetRepository'
+import { TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors'
 
 class FakeTweetRepository implements TweetRepository {
   public updatedTweet: Tweet | null = null
@@ -33,41 +34,44 @@ describe('UpdateTweetUseCase', () => {
     )
     const useCase = new UpdateTweetUseCase(repository)
 
-    await useCase.execute({
+    const result = await useCase.execute({
       id: 'tweet-123',
       message: 'Nouveau tweet',
       authorId: 'user-123',
     })
 
+    expect(result.success).toBe(true)
     expect(repository.updatedTweet?.content).toBe('Nouveau tweet')
     expect(repository.updatedTweet?.authorId).toBe('user-123')
   })
 
-  it('should throw when tweet does not exist', async () => {
+  it('should return a TweetNotFoundError when tweet does not exist', async () => {
     const repository = new FakeTweetRepository(null)
     const useCase = new UpdateTweetUseCase(repository)
 
-    await expect(
-      useCase.execute({
-        id: 'tweet-123',
-        message: 'Nouveau tweet',
-        authorId: 'user-123',
-      })
-    ).rejects.toThrow('Tweet not found')
+    const result = await useCase.execute({
+      id: 'tweet-123',
+      message: 'Nouveau tweet',
+      authorId: 'user-123',
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.success === false && result.error).toBeInstanceOf(TweetNotFoundError)
   })
 
-  it('should throw when author is not the owner', async () => {
+  it('should return an UnauthorizedError when author is not the owner', async () => {
     const repository = new FakeTweetRepository(
       new Tweet('Ancien tweet', 'user-123')
     )
     const useCase = new UpdateTweetUseCase(repository)
 
-    await expect(
-      useCase.execute({
-        id: 'tweet-123',
-        message: 'Nouveau tweet',
-        authorId: 'user-456',
-      })
-    ).rejects.toThrow('Unauthorized')
+    const result = await useCase.execute({
+      id: 'tweet-123',
+      message: 'Nouveau tweet',
+      authorId: 'user-456',
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.success === false && result.error).toBeInstanceOf(UnauthorizedError)
   })
 })

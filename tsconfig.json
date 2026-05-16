@@ -23,6 +23,9 @@
       ],
       "@tests/*": [
         "src/tests/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
       ]
     },
     "experimentalDecorators": true,

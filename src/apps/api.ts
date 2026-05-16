@@ -7,6 +7,8 @@ import { UpdateTweetUseCase } from '@application/tweet/update/UpdateTweetUseCase
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase';
 import { ViewWallUseCase } from '@application/tweet/wall/ViewWallUseCase';
 import { TweetApiPresenter } from './presenters/TweetApiPresenter';
+import { TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors';
+import { UserAlreadyFollowsError } from '@domain/user/UserErrors';
 
 const tweetRepository = new PrismaTweetRepository();
 const followRepository = new PrismaFollowRepository();
@@ -34,13 +36,30 @@ app.get('/tweets', async (request, reply) => {
 app.put('/tweets/:id', async (request, reply) => {
   const { id } = request.params as { id: string };
   const { message, authorId } = request.body as { message: string; authorId: string };
-  await updateTweetUseCase.execute({ id, message, authorId });
+  const result = await updateTweetUseCase.execute({ id, message, authorId });
+
+  if (!result.success) {
+    if (result.error instanceof TweetNotFoundError) {
+      return reply.status(404).send({ error: result.error.message });
+    }
+    if (result.error instanceof UnauthorizedError) {
+      return reply.status(403).send({ error: result.error.message });
+    }
+  }
+
   reply.status(204).send();
 });
 
 app.post('/follows', async (request, reply) => {
   const { followerId, followedId } = request.body as { followerId: string; followedId: string };
-  await followUserUseCase.execute({ followerId, followedId });
+  const result = await followUserUseCase.execute({ followerId, followedId });
+
+  if (!result.success) {
+    if (result.error instanceof UserAlreadyFollowsError) {
+      return reply.status(409).send({ error: result.error.message });
+    }
+  }
+
   reply.status(201).send();
 });
 
@@ -51,10 +70,7 @@ app.get('/wall/:userId', async (request, reply) => {
 });
 
 app.setErrorHandler((error: Error, _request, reply) => {
-  const statusCode = error.message === 'Tweet not found' ? 404
-    : error.message === 'Unauthorized' ? 403
-    : 400;
-  reply.status(statusCode).send({ error: error.message });
+  reply.status(400).send({ error: error.message });
 });
 
 const start = async () => {

@@ -1,17 +1,19 @@
 import { describe, expect, it } from 'vitest'
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
 import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository'
+import { UserAlreadyFollowsError } from '@domain/user/UserErrors'
 
 describe('FollowUserUseCase', () => {
   it('should allow a user to follow another user', async () => {
     const followRepository = new InMemoryFollowRepository()
     const useCase = new FollowUserUseCase(followRepository)
 
-    await useCase.execute({
+    const result = await useCase.execute({
       followerId: 'user-1',
       followedId: 'user-2',
     })
 
+    expect(result.success).toBe(true)
     expect(followRepository.follows).toHaveLength(1)
     expect(followRepository.follows[0]).toEqual(
       expect.objectContaining({
@@ -33,7 +35,7 @@ describe('FollowUserUseCase', () => {
     ).rejects.toThrow('A user cannot follow themselves.')
   })
 
-  it('should prevent following the same user twice', async () => {
+  it('should return a UserAlreadyFollowsError when following the same user twice', async () => {
     const followRepository = new InMemoryFollowRepository()
     const useCase = new FollowUserUseCase(followRepository)
 
@@ -42,13 +44,13 @@ describe('FollowUserUseCase', () => {
       followedId: 'user-2',
     })
 
-    await expect(
-      useCase.execute({
-        followerId: 'user-1',
-        followedId: 'user-2',
-      })
-    ).rejects.toThrow('User already follows this user.')
+    const result = await useCase.execute({
+      followerId: 'user-1',
+      followedId: 'user-2',
+    })
 
+    expect(result.success).toBe(false)
+    expect(result.success === false && result.error).toBeInstanceOf(UserAlreadyFollowsError)
     expect(followRepository.follows).toHaveLength(1)
   })
 
