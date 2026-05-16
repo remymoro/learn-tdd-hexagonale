@@ -1,11 +1,11 @@
 import Fastify from 'fastify';
 import { PrismaTweetRepository } from '@infrastructure/PrismaTweetRepository';
 import { PrismaFollowRepository } from '@infrastructure/PrismaFollowRepository';
-import { PublishTweetUseCase } from '@application/tweet/PublishTweetUseCase';
-import { ViewTimelineUseCase } from '@application/tweet/ViewTimelineUseCase';
-import { UpdateTweetUseCase } from '@application/tweet/UpdateTweetUseCase';
+import { PublishTweetUseCase } from '@application/tweet/publish/PublishTweetUseCase';
+import { ViewTimelineUseCase } from '@application/tweet/timeline/ViewTimelineUseCase';
+import { UpdateTweetUseCase } from '@application/tweet/update/UpdateTweetUseCase';
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase';
-import { ViewWallUseCase } from '@application/user/ViewWallUseCase';
+import { ViewWallUseCase } from '@application/tweet/wall/ViewWallUseCase';
 import { TweetApiPresenter } from './presenters/TweetApiPresenter';
 
 const tweetRepository = new PrismaTweetRepository();

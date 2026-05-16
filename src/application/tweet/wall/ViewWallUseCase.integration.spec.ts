@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { PublishTweetUseCase } from '@application/tweet/PublishTweetUseCase'
+import { PublishTweetUseCase } from '@application/tweet/publish/PublishTweetUseCase'
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
-import { ViewWallUseCase } from '@application/user/ViewWallUseCase'
+import { ViewWallUseCase } from './ViewWallUseCase'
 import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository'
 import { InMemoryTweetRepository } from '@infrastructure/InMemoryTweetRepository'
 

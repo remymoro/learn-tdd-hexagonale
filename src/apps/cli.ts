@@ -1,7 +1,7 @@
 import { Command } from 'commander';
-import { PublishTweetUseCase } from '@application/tweet/PublishTweetUseCase';
-import { ViewTimelineUseCase } from '@application/tweet/ViewTimelineUseCase';
-import { UpdateTweetUseCase } from '@application/tweet/UpdateTweetUseCase';
+import { PublishTweetUseCase } from '@application/tweet/publish/PublishTweetUseCase';
+import { ViewTimelineUseCase } from '@application/tweet/timeline/ViewTimelineUseCase';
+import { UpdateTweetUseCase } from '@application/tweet/update/UpdateTweetUseCase';
 import { FileSystemTweetRepository } from '@infrastructure/FileSystemTweetRepository';
 import { TweetCliPresenter } from './presenters/TweetCliPresenter';
 

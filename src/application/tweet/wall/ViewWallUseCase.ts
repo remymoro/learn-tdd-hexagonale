@@ -1,7 +1,7 @@
 import { UserId } from '@domain/user/UserId'
 import { FollowRepository } from '@application/ports/FollowRepository'
 import { TweetRepository } from '@application/ports/TweetRepository'
-import { TweetDto } from '@application/tweet/TweetDto'
+import { ViewWallResponse } from './ViewWallResponse'
 
 type ViewWallQuery = {
   userId: string
@@ -13,7 +13,7 @@ export class ViewWallUseCase {
     private readonly followRepository: FollowRepository
   ) {}
 
-  async execute(query: ViewWallQuery): Promise<TweetDto[]> {
+  async execute(query: ViewWallQuery): Promise<ViewWallResponse[]> {
     const userId = new UserId(query.userId)
     const followedUserIds = await this.followRepository.findFollowedUserIds(userId)
 
@@ -26,6 +26,10 @@ export class ViewWallUseCase {
 
     return tweets
       .filter(tweet => followedIds.includes(tweet.authorId))
-      .map(tweet => ({ id: tweet.getTweetId(), content: tweet.getMessage(), authorId: tweet.getAuthorId() }))
+      .map(tweet => ({
+        id: tweet.getTweetId(),
+        content: tweet.getMessage(),
+        authorId: tweet.getAuthorId(),
+      }))
   }
 }

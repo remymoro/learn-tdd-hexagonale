@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { UpdateTweetUseCase } from '@application/tweet/UpdateTweetUseCase'
+import { UpdateTweetUseCase } from './UpdateTweetUseCase'
 import { Tweet } from '@domain/tweet/Tweet'
 import { TweetRepository } from '@application/ports/TweetRepository'
 

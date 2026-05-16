@@ -1,14 +1,15 @@
-import { TweetDto } from '@application/tweet/TweetDto'
+import { PublishTweetResponse } from '@application/tweet/publish/PublishTweetResponse'
+import { ViewTimelineResponse } from '@application/tweet/timeline/ViewTimelineResponse'
 
 export class TweetCliPresenter {
-  static formatList(tweets: TweetDto[]): string {
+  static formatList(tweets: ViewTimelineResponse[]): string {
     if (tweets.length === 0) return 'Aucun tweet à afficher.'
     return tweets
       .map((tweet, index) => `[${index + 1}] ${tweet.id} @${tweet.authorId}: ${tweet.content}`)
       .join('\n')
   }
 
-  static formatCreated(tweet: TweetDto): string {
+  static formatCreated(tweet: PublishTweetResponse): string {
     return `✅ Tweet publié : [${tweet.id}] @${tweet.authorId}: ${tweet.content}`
   }
 
