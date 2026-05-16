@@ -1,0 +1,27 @@
+[
+  {
+    "id": "90db9183-e3ac-4755-8a26-98b9fed725d4",
+    "content": "Mon tout premier tweet depuis la CLI !",
+    "authorId": "user-123"
+  },
+  {
+    "id": "3439f951-93b8-48b6-b231-3c820b41b7c7",
+    "content": "Ce tweet persiste dans un fichier !",
+    "authorId": "fs-user"
+  },
+  {
+    "id": "16e074fb-68bb-4ad2-9028-7271e2144a59",
+    "content": "Mon tout premier tweet depuis la CLI !",
+    "authorId": "user-123"
+  },
+  {
+    "id": "49987f3f-19a2-480d-aa01-6509b03d96f9",
+    "content": "Mon tout premier tweet depuis la CLI !",
+    "authorId": "user-123"
+  },
+  {
+    "id": "81a14c17-2f42-438b-9615-6fe222e7600e",
+    "content": "remy",
+    "authorId": "user-123"
+  }
+]
