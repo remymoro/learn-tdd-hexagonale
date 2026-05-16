@@ -1,5 +1,6 @@
 import { Tweet } from '@domain/tweet/Tweet';
 import { TweetRepository } from '@application/ports/TweetRepository';
+import { TweetDto } from './TweetDto';
 
 type PublishTweetCommand = {
   message: string;
@@ -9,8 +10,9 @@ type PublishTweetCommand = {
 export class PublishTweetUseCase {
   constructor(private tweetRepository: TweetRepository) { }
 
-  async execute(command: PublishTweetCommand): Promise<void> {
+  async execute(command: PublishTweetCommand): Promise<TweetDto> {
     const tweet = new Tweet(command.message, command.authorId);
     await this.tweetRepository.save(tweet);
+    return { id: tweet.getTweetId(), content: tweet.getMessage(), authorId: tweet.getAuthorId() };
   }
 }
