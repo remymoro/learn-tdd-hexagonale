@@ -1,39 +1,43 @@
 {
   "compilerOptions": {
-    /* Organisation des fichiers */
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
-
-    /* Cible et modules (CommonJS est le standard pour NestJS/Node classique) */
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-
-    /* Mode Strict (Indispensable pour du code métier robuste) */
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noUncheckedIndexedAccess": true,
-
-    /* Raccourcis d'import (Hexagonal Architecture) */
     "baseUrl": ".",
     "paths": {
-      "@domain/*": ["src/domain/*"],
-      "@application/*": ["src/application/*"],
-      "@infrastructure/*": ["src/infrastructure/*"],
-      "@tests/*": ["src/tests/*"]
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@application/*": [
+        "src/application/*"
+      ],
+      "@infrastructure/*": [
+        "src/infrastructure/*"
+      ],
+      "@tests/*": [
+        "src/tests/*"
+      ]
     },
-
-    /* Préparation pour NestJS (Décorateurs) */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-
-    /* Interopérabilité et Typage */
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+    "generated/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

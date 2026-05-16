@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Tweet {
+  id       String @id
+  content  String
+  authorId String
+
+  @@map("tweets")
+}
+
+model Follow {
+  followerId String
+  followedId String
+
+  @@id([followerId, followedId])
+  @@map("follows")
+}
