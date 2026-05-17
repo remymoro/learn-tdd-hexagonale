@@ -1,24 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { CliModule } from './../src/cli.module';
+import { describe, it } from 'vitest';
 
+// La CLI est une application en ligne de commande, pas un serveur HTTP.
+// Les tests e2e de la CLI s'effectuent via l'exécution du process et
+// l'inspection de la sortie standard (stdout/stderr).
 describe('CliController (e2e)', () => {
-  let app: INestApplication;
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [CliModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
+  it.todo('implémente les tests e2e CLI via stdout/stderr');
 });

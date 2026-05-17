@@ -1,10 +1,9 @@
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
   resolve: {
+    tsconfigPaths: true,
     alias: {
       '@domain':         resolve(__dirname, 'libs/crafty/src/domain'),
       '@application':    resolve(__dirname, 'libs/crafty/src/application'),
@@ -16,6 +15,6 @@ export default defineConfig({
     }
   },
   test: {
-    exclude: ['**/*.integration.spec.ts', '**/*.e2e-spec.ts', 'node_modules/**'],
+    include: ['**/*.e2e-spec.ts'],
   },
 });
