@@ -17,7 +17,7 @@
       "@infrastructure/*": ["libs/crafty/src/infrastructure/*"],
       "@shared/*": ["libs/crafty/src/shared/*"],
       "@tests/*": ["libs/crafty/src/tests/*"],
-      "@builders/*": ["libs/crafty/src/builders/*"],
+      "@builders/*": ["libs/crafty/src/tests/builders/*"],
       "@crafty/crafty": ["libs/crafty/src"],
       "@crafty/crafty/*": ["libs/crafty/src/*"],
       "@generated/*": ["generated/*"]
