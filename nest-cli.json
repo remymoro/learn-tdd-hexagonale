@@ -1,0 +1,46 @@
+{
+  "projects": {
+    "api": {
+      "type": "application",
+      "root": "apps/api",
+      "entryFile": "main",
+      "sourceRoot": "apps/api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api/tsconfig.app.json"
+      }
+    },
+    "cli": {
+      "type": "application",
+      "root": "apps/cli",
+      "entryFile": "main",
+      "sourceRoot": "apps/cli/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cli/tsconfig.app.json"
+      }
+    },
+    "crafty": {
+      "type": "library",
+      "root": "libs/crafty",
+      "entryFile": "index",
+      "sourceRoot": "libs/crafty/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/crafty/tsconfig.lib.json"
+      }
+    },
+    "learn-tdd-hexagonale": {
+      "type": "application",
+      "root": "apps/learn-tdd-hexagonale",
+      "entryFile": "main",
+      "sourceRoot": "apps/learn-tdd-hexagonale/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/learn-tdd-hexagonale/tsconfig.app.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "tsConfigPath": "apps/learn-tdd-hexagonale/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/learn-tdd-hexagonale",
+  "sourceRoot": "apps/learn-tdd-hexagonale/src"
+}

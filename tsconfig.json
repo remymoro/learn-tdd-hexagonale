@@ -12,21 +12,15 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "@domain/*": [
-        "src/domain/*"
-      ],
-      "@application/*": [
-        "src/application/*"
-      ],
-      "@infrastructure/*": [
-        "src/infrastructure/*"
-      ],
-      "@tests/*": [
-        "src/tests/*"
-      ],
-      "@shared/*": [
-        "src/shared/*"
-      ]
+      "@application/*": ["libs/crafty/src/application/*"],
+      "@domain/*": ["libs/crafty/src/domain/*"],
+      "@infrastructure/*": ["libs/crafty/src/infrastructure/*"],
+      "@shared/*": ["libs/crafty/src/shared/*"],
+      "@tests/*": ["libs/crafty/src/tests/*"],
+      "@builders/*": ["libs/crafty/src/builders/*"],
+      "@crafty/crafty": ["libs/crafty/src"],
+      "@crafty/crafty/*": ["libs/crafty/src/*"],
+      "@generated/*": ["generated/*"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -36,7 +30,8 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*.ts",
+    "libs/**/*.ts",
+    "apps/**/*.ts",
     "generated/**/*.ts"
   ],
   "exclude": [

@@ -1,7 +1,7 @@
 import { execSync } from 'child_process'
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '../../../generated/prisma/client.js'
+import { PrismaClient } from '@generated/prisma/client'
 
 export interface TestDatabase {
   container: StartedPostgreSqlContainer

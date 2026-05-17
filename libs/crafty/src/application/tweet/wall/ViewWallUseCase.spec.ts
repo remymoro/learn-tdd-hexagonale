@@ -3,7 +3,7 @@ import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
 import { ViewWallUseCase } from './ViewWallUseCase'
 import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository'
 import { InMemoryTweetRepository } from '@infrastructure/InMemoryTweetRepository'
-import { aTweet } from '@tests/builders/tweetBuilder'
+import { aTweet } from '../../../tests/builders/tweetBuilder'
 
 describe('ViewWallUseCase', () => {
   it('should return tweets from followed users', async () => {
