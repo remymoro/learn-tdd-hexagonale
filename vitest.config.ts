@@ -9,7 +9,11 @@ export default defineConfig({
       '@infrastructure': resolve(__dirname, 'libs/crafty/src/infrastructure'),
       '@shared':         resolve(__dirname, 'libs/crafty/src/shared'),
       '@tests':          resolve(__dirname, 'libs/crafty/src/tests'),
+      '@builders':       resolve(__dirname, 'libs/crafty/src/tests/builders'),
       '@generated':      resolve(__dirname, 'generated'),
     }
-  }
+  },
+  test: {
+    exclude: ['**/*.integration.spec.ts', 'node_modules/**'],
+  },
 });

@@ -27,20 +27,8 @@
         "tsConfigPath": "libs/crafty/tsconfig.lib.json"
       }
     },
-    "learn-tdd-hexagonale": {
-      "type": "application",
-      "root": "apps/learn-tdd-hexagonale",
-      "entryFile": "main",
-      "sourceRoot": "apps/learn-tdd-hexagonale/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/learn-tdd-hexagonale/tsconfig.app.json"
-      }
-    }
-  },
-  "compilerOptions": {
-    "tsConfigPath": "apps/learn-tdd-hexagonale/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/learn-tdd-hexagonale",
-  "sourceRoot": "apps/learn-tdd-hexagonale/src"
+  "root": "apps/api",
+  "sourceRoot": "apps/api/src"
 }
