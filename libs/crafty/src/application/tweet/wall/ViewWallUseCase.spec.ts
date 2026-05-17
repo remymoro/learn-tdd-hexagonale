@@ -3,10 +3,10 @@ import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
 import { ViewWallUseCase } from './ViewWallUseCase'
 import { InMemoryFollowRepository } from '@tests/InMemoryFollowRepository'
 import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository'
-import { aTweet } from '../../../tests/builders/tweetBuilder'
+import { aTweet } from '@tests/builders/tweetBuilder'
 
 describe('ViewWallUseCase', () => {
-  it('should return tweets from followed users', async () => {
+  it('retourne les tweets des utilisateurs suivis', async () => {
     const tweetRepository = new InMemoryTweetRepository()
     const followRepository = new InMemoryFollowRepository()
     const followUserUseCase = new FollowUserUseCase(followRepository)
@@ -25,7 +25,7 @@ describe('ViewWallUseCase', () => {
     expect(wall[1]).toEqual(expect.objectContaining({ content: 'Tweet user 3', authorId: 'user-3' }))
   })
 
-  it('should return an empty wall when user follows nobody', async () => {
+  it('retourne un mur vide si l\'utilisateur ne suit personne', async () => {
     const tweetRepository = new InMemoryTweetRepository()
     const followRepository = new InMemoryFollowRepository()
     const viewWallUseCase = new ViewWallUseCase(tweetRepository, followRepository)
@@ -37,7 +37,7 @@ describe('ViewWallUseCase', () => {
     expect(wall).toEqual([])
   })
 
-  it('should not return the user own tweets when they do not follow themselves', async () => {
+  it('n\'inclut pas les tweets de l\'utilisateur lui-même', async () => {
     const tweetRepository = new InMemoryTweetRepository()
     const followRepository = new InMemoryFollowRepository()
     const followUserUseCase = new FollowUserUseCase(followRepository)
@@ -53,10 +53,8 @@ describe('ViewWallUseCase', () => {
     expect(wall[0]).toEqual(expect.objectContaining({ content: 'Tweet suivi', authorId: 'user-2' }))
   })
 
-  it('should reject an empty user id', async () => {
-    const tweetRepository = new InMemoryTweetRepository()
-    const followRepository = new InMemoryFollowRepository()
-    const viewWallUseCase = new ViewWallUseCase(tweetRepository, followRepository)
+  it('rejette un userId vide', async () => {
+    const viewWallUseCase = new ViewWallUseCase(new InMemoryTweetRepository(), new InMemoryFollowRepository())
 
     await expect(viewWallUseCase.execute({ userId: '' })).rejects.toThrow('User ID is required.')
   })

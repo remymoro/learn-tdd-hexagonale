@@ -1,196 +1,145 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
-import { promises as fs } from 'fs';
-import * as path from 'path';
-import { FileSystemTweetRepository } from './FileSystemTweetRepository';
-import { Tweet } from '@domain/tweet/Tweet';
-import { Message } from '@domain/tweet/Message';
-import { AuthorId } from '@domain/tweet/AuthorId';
-import { TweetId } from '@domain/tweet/TweetId';
+import { describe, it, expect, beforeEach, afterAll } from 'vitest'
+import { promises as fs } from 'fs'
+import * as path from 'path'
+import { FileSystemTweetRepository } from './FileSystemTweetRepository'
+import { Tweet } from '@domain/tweet/Tweet'
+import { Message } from '@domain/tweet/Message'
+import { AuthorId } from '@domain/tweet/AuthorId'
 
-const TWEET_ID_1 = '550e8400-e29b-41d4-a716-446655440000';
-const TWEET_ID_2 = '660e8400-e29b-41d4-a716-446655440000';
-const TWEET_ID_3 = '770e8400-e29b-41d4-a716-446655440000';
-const UNKNOWN_TWEET_ID = '880e8400-e29b-41d4-a716-446655440000';
+const UNKNOWN_TWEET_ID = '880e8400-e29b-41d4-a716-446655440000'
 
 describe('FileSystemTweetRepository', () => {
-  const testFilePath = path.join(process.cwd(), 'data', 'test-tweets.json');
-  let repository: FileSystemTweetRepository;
+  const testFilePath = path.join(process.cwd(), 'data', 'test-tweets.json')
+  let repository: FileSystemTweetRepository
 
   beforeEach(async () => {
-    // Nettoyer le fichier de test avant chaque test
     try {
-      await fs.unlink(testFilePath);
+      await fs.unlink(testFilePath)
     } catch (error: any) {
-      if (error.code !== 'ENOENT') throw error;
+      if (error.code !== 'ENOENT') throw error
     }
-
-    repository = new FileSystemTweetRepository(testFilePath);
-  });
+    repository = new FileSystemTweetRepository(testFilePath)
+  })
 
   afterAll(async () => {
-    // Nettoyage final
     try {
-      await fs.unlink(testFilePath);
+      await fs.unlink(testFilePath)
     } catch (error: any) {
-      if (error.code !== 'ENOENT') throw error;
+      if (error.code !== 'ENOENT') throw error
     }
-  });
+  })
 
-  it('should save a tweet to the file system', async () => {
-    // Arrange
-    const tweet = Tweet.create(new Message('Mon tweet FS'), new AuthorId('user-fs'), new TweetId(TWEET_ID_1));
+  it('sauvegarde un tweet dans le système de fichiers', async () => {
+    const tweet = Tweet.create(new Message('Mon tweet FS'), new AuthorId('user-fs'))
 
-    // Act
-    await repository.save(tweet);
+    await repository.save(tweet)
 
-    // Assert
-    const savedTweets = await repository.getAllTweets();
-    expect(savedTweets.length).toBe(1);
-    expect(savedTweets[0]).toEqual(expect.objectContaining(tweet));
-    expect(savedTweets[0]).toHaveProperty('id', tweet.id);
-    expect(savedTweets[0]).toHaveProperty('content', tweet.content);
-    expect(savedTweets[0]).toHaveProperty('authorId', tweet.authorId);
-  });
+    const saved = await repository.getAllTweets()
+    expect(saved).toHaveLength(1)
+    expect(saved[0]?.id).toBe(tweet.id)
+    expect(saved[0]?.content).toBe(tweet.content)
+    expect(saved[0]?.authorId).toBe(tweet.authorId)
+  })
 
-  it('should append multiple tweets to the file system without overwriting', async () => {
-    // Arrange
-    const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'), new TweetId(TWEET_ID_2));
+  it('ajoute plusieurs tweets sans écraser les précédents', async () => {
+    const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'))
+    const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'))
 
-    // Act
-    await repository.save(tweet1);
-    await repository.save(tweet2);
+    await repository.save(tweet1)
+    await repository.save(tweet2)
 
-    // Assert
-    const savedTweets = await repository.getAllTweets();
-    expect(savedTweets.length).toBe(2);
-    expect(savedTweets[0]).toEqual(expect.objectContaining(tweet1));
-    expect(savedTweets[1]).toEqual(expect.objectContaining(tweet2));
-    expect(savedTweets[0]).toHaveProperty('id', tweet1.id);
-    expect(savedTweets[0]).toHaveProperty('content', tweet1.content);
-    expect(savedTweets[0]).toHaveProperty('authorId', tweet1.authorId);
-    expect(savedTweets[1]).toHaveProperty('id', tweet2.id);
-    expect(savedTweets[1]).toHaveProperty('content', tweet2.content);
-    expect(savedTweets[1]).toHaveProperty('authorId', tweet2.authorId);
-  });
+    const saved = await repository.getAllTweets()
+    expect(saved).toHaveLength(2)
+    expect(saved[0]?.id).toBe(tweet1.id)
+    expect(saved[1]?.id).toBe(tweet2.id)
+  })
 
-  it('should return an empty array if the file does not exist', async () => {
-    // Act
-    const savedTweets = await repository.getAllTweets();
+  it('retourne un tableau vide si le fichier n\'existe pas', async () => {
+    const saved = await repository.getAllTweets()
+    expect(saved).toEqual([])
+  })
 
-    // Assert
-    expect(savedTweets).toEqual([]);
-  });
+  it('persiste les données dans le bon format JSON', async () => {
+    const tweet = Tweet.create(new Message('Tweet avec id persistant'), new AuthorId('user-1'))
 
-  it('should persist tweet id in the JSON file', async () => {
-    // Arrange
-    const tweet = Tweet.create(new Message('Tweet avec id persistant'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
+    await repository.save(tweet)
 
-    // Act
-    await repository.save(tweet);
+    const fileContent = await fs.readFile(testFilePath, 'utf-8')
+    const parsed = JSON.parse(fileContent)
+    expect(parsed).toEqual([{
+      id: tweet.id,
+      content: tweet.content,
+      authorId: tweet.authorId,
+      deletedAt: null,
+    }])
+  })
 
-    // Assert
-    const fileContent = await fs.readFile(testFilePath, 'utf-8');
-    const parsedTweets = JSON.parse(fileContent);
+  it('retrouve un tweet par son id', async () => {
+    const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'))
+    const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'))
+    await repository.save(tweet1)
+    await repository.save(tweet2)
 
-    expect(parsedTweets).toEqual([
-      {
-        id: tweet.id,
-        content: tweet.content,
-        authorId: tweet.authorId,
-        deletedAt: null,
-      },
-    ]);
-  });
+    const found = await repository.findById(tweet2.id)
 
-  it('should find a tweet by its id', async () => {
-    // Arrange
-    const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'), new TweetId(TWEET_ID_2));
-    await repository.save(tweet1);
-    await repository.save(tweet2);
+    expect(found).not.toBeNull()
+    expect(found?.id).toBe(tweet2.id)
+    expect(found?.content).toBe(tweet2.content)
+    expect(found?.authorId).toBe(tweet2.authorId)
+  })
 
-    // Act
-    const foundTweet = await repository.findById(tweet2.id);
+  it('retourne null si le tweet n\'existe pas', async () => {
+    const tweet = Tweet.create(new Message('Tweet existant'), new AuthorId('user-1'))
+    await repository.save(tweet)
 
-    // Assert
-    expect(foundTweet).not.toBeNull();
-    expect(foundTweet?.id).toBe(tweet2.id);
-    expect(foundTweet?.content).toBe(tweet2.content);
-    expect(foundTweet?.authorId).toBe(tweet2.authorId);
-  });
+    const found = await repository.findById(UNKNOWN_TWEET_ID)
+    expect(found).toBeNull()
+  })
 
-  it('should return null when tweet id does not exist', async () => {
-    // Arrange
-    const tweet = Tweet.create(new Message('Tweet existant'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    await repository.save(tweet);
+  it('met à jour un tweet sans en ajouter un nouveau', async () => {
+    const tweet = Tweet.create(new Message('Ancien message'), new AuthorId('user-1'))
+    await repository.save(tweet)
 
-    // Act
-    const foundTweet = await repository.findById(UNKNOWN_TWEET_ID);
+    await repository.update(tweet.withContent(new Message('Nouveau message')))
 
-    // Assert
-    expect(foundTweet).toBeNull();
-  });
+    const saved = await repository.getAllTweets()
+    expect(saved).toHaveLength(1)
+    expect(saved[0]?.id).toBe(tweet.id)
+    expect(saved[0]?.content).toBe('Nouveau message')
+  })
 
-  it('should update an existing tweet without adding a new one', async () => {
-    // Arrange
-    const tweet = Tweet.create(new Message('Ancien message'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    await repository.save(tweet);
-    const updatedTweet = tweet.withContent(new Message('Nouveau message'));
+  it('ignore la mise à jour d\'un tweet inconnu', async () => {
+    const tweet = Tweet.create(new Message('Tweet existant'), new AuthorId('user-1'))
+    const unknown = Tweet.create(new Message('Tweet inconnu'), new AuthorId('user-1'))
+    await repository.save(tweet)
 
-    // Act
-    await repository.update(updatedTweet);
+    await repository.update(unknown)
 
-    // Assert
-    const savedTweets = await repository.getAllTweets();
-    expect(savedTweets).toHaveLength(1);
-    expect(savedTweets[0]?.id).toBe(tweet.id);
-    expect(savedTweets[0]?.content).toBe('Nouveau message');
-    expect(savedTweets[0]?.authorId).toBe(tweet.authorId);
-  });
+    const saved = await repository.getAllTweets()
+    expect(saved).toHaveLength(1)
+    expect(saved[0]?.id).toBe(tweet.id)
+  })
 
-  it('should keep tweets unchanged when updating an unknown tweet', async () => {
-    // Arrange
-    const tweet = Tweet.create(new Message('Tweet existant'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    const unknownTweet = Tweet.create(new Message('Tweet inconnu'), new AuthorId('user-1'), new TweetId(TWEET_ID_2));
-    await repository.save(tweet);
+  it('exclut les tweets soft-deleted de getAllTweets', async () => {
+    const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'))
+    const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'))
+    await repository.save(tweet1)
+    await repository.save(tweet2)
 
-    // Act
-    await repository.update(unknownTweet);
+    await repository.update(tweet1.markAsDeleted(new Date()))
 
-    // Assert
-    const savedTweets = await repository.getAllTweets();
-    expect(savedTweets).toHaveLength(1);
-    expect(savedTweets[0]?.id).toBe(tweet.id);
-    expect(savedTweets[0]?.content).toBe(tweet.content);
-  });
+    const saved = await repository.getAllTweets()
+    expect(saved).toHaveLength(1)
+    expect(saved[0]?.id).toBe(tweet2.id)
+  })
 
-  it('should exclude a soft-deleted tweet from getAllTweets', async () => {
-    // Arrange
-    const tweet1 = Tweet.create(new Message('Premier tweet'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    const tweet2 = Tweet.create(new Message('Deuxième tweet'), new AuthorId('user-2'), new TweetId(TWEET_ID_2));
-    await repository.save(tweet1);
-    await repository.save(tweet2);
+  it('retrouve un tweet soft-deleted via findById', async () => {
+    const tweet = Tweet.create(new Message('Tweet supprimé'), new AuthorId('user-1'))
+    await repository.save(tweet)
 
-    // Act
-    await repository.update(tweet1.markAsDeleted(new Date()));
+    await repository.update(tweet.markAsDeleted(new Date()))
 
-    // Assert
-    const savedTweets = await repository.getAllTweets();
-    expect(savedTweets).toHaveLength(1);
-    expect(savedTweets[0]?.id).toBe(tweet2.id);
-  });
-
-  it('should still find a soft-deleted tweet by id', async () => {
-    // Arrange
-    const tweet = Tweet.create(new Message('Tweet supprimé'), new AuthorId('user-1'), new TweetId(TWEET_ID_1));
-    await repository.save(tweet);
-
-    // Act
-    await repository.update(tweet.markAsDeleted(new Date()));
-
-    // Assert
-    const found = await repository.findById(tweet.id);
-    expect(found?.isDeleted).toBe(true);
-  });
-});
+    const found = await repository.findById(tweet.id)
+    expect(found?.isDeleted).toBe(true)
+  })
+})

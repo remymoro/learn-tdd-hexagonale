@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository';
 import { ViewTimelineUseCase } from './ViewTimelineUseCase';
-import { aTweet } from '../../../tests/builders/tweetBuilder';
+import { aTweet } from '@tests/builders/tweetBuilder';
 
 describe('ViewTimelineUseCase', () => {
   it('should return all tweets when no authorId is provided', async () => {

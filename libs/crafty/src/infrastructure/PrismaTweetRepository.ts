@@ -1,32 +1,32 @@
-import { Tweet } from '@domain/tweet/Tweet.js'
-import { TweetId } from '@domain/tweet/TweetId.js'
-import { Message } from '@domain/tweet/Message.js'
-import { AuthorId } from '@domain/tweet/AuthorId.js'
-import { TweetRepository } from '@application/ports/TweetRepository.js'
+import { Tweet } from '@domain/tweet/Tweet'
+import { TweetId } from '@domain/tweet/TweetId'
+import { Message } from '@domain/tweet/Message'
+import { AuthorId } from '@domain/tweet/AuthorId'
+import { TweetRepository } from '@application/ports/TweetRepository'
 import { prisma as defaultPrisma } from './prismaClient.js'
 
 type PrismaClientInstance = typeof defaultPrisma
 
 export class PrismaTweetRepository implements TweetRepository {
-  constructor(private readonly prisma: PrismaClientInstance = defaultPrisma) { }
+  constructor(private readonly prisma: PrismaClientInstance = defaultPrisma) {}
 
   async save(tweet: Tweet): Promise<void> {
     await this.prisma.tweet.create({
       data: {
-        id: tweet.getTweetId(),
-        content: tweet.getMessage(),
-        authorId: tweet.getAuthorId(),
+        id: tweet.id,
+        content: tweet.content,
+        authorId: tweet.authorId,
       },
     })
   }
 
   async update(tweet: Tweet): Promise<void> {
     await this.prisma.tweet.update({
-      where: { id: tweet.getTweetId() },
+      where: { id: tweet.id },
       data: {
-        content: tweet.getMessage(),
-        authorId: tweet.getAuthorId(),
-        deletedAt: tweet.getDeletedAt(),
+        content: tweet.content,
+        authorId: tweet.authorId,
+        deletedAt: tweet.deletedAt,
       },
     })
   }
@@ -39,7 +39,7 @@ export class PrismaTweetRepository implements TweetRepository {
       new TweetId(row.id),
       new Message(row.content),
       new AuthorId(row.authorId),
-      row.deletedAt
+      row.deletedAt,
     )
   }
 
@@ -50,7 +50,7 @@ export class PrismaTweetRepository implements TweetRepository {
     return rows.map(row => Tweet.reconstitute(
       new TweetId(row.id),
       new Message(row.content),
-      new AuthorId(row.authorId)
+      new AuthorId(row.authorId),
     ))
   }
 
@@ -61,7 +61,7 @@ export class PrismaTweetRepository implements TweetRepository {
     return rows.map(row => Tweet.reconstitute(
       new TweetId(row.id),
       new Message(row.content),
-      new AuthorId(row.authorId)
+      new AuthorId(row.authorId),
     ))
   }
 
@@ -72,7 +72,7 @@ export class PrismaTweetRepository implements TweetRepository {
     return rows.map(row => Tweet.reconstitute(
       new TweetId(row.id),
       new Message(row.content),
-      new AuthorId(row.authorId)
+      new AuthorId(row.authorId),
     ))
   }
 }

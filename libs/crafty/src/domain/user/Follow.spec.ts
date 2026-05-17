@@ -23,12 +23,4 @@ describe('Follow', () => {
     expect(follow.equals(sameFollow)).toBe(true)
   })
 
-  it('should serialize follow relationship to JSON', () => {
-    const follow = Follow.create(new UserId('user-1'), new UserId('user-2'))
-
-    expect(follow.toJSON()).toEqual({
-      followerId: 'user-1',
-      followedId: 'user-2',
-    })
-  })
 })

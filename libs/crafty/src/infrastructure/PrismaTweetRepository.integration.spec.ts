@@ -3,6 +3,7 @@ import { type StartedPostgreSqlContainer } from '@testcontainers/postgresql'
 import { PrismaClient } from '../../generated/prisma/client.js'
 import { PrismaTweetRepository } from './PrismaTweetRepository.js'
 import { createTestDatabase } from '../tests/helpers/createTestDatabase.js'
+import { Message } from '../domain/tweet/Message.js'
 import { aTweet } from '../tests/builders/tweetBuilder.js'
 
 describe('PrismaTweetRepository', () => {
@@ -31,11 +32,11 @@ describe('PrismaTweetRepository', () => {
 
     await repository.save(tweet)
 
-    const found = await repository.findById(tweet.getTweetId())
+    const found = await repository.findById(tweet.id)
     expect(found).not.toBeNull()
-    expect(found!.getTweetId()).toBe(tweet.getTweetId())
-    expect(found!.getMessage()).toBe(tweet.getMessage())
-    expect(found!.getAuthorId()).toBe(tweet.getAuthorId())
+    expect(found!.id).toBe(tweet.id)
+    expect(found!.content).toBe(tweet.content)
+    expect(found!.authorId).toBe(tweet.authorId)
   })
 
   it('retourne null si le tweet n\'existe pas', async () => {
@@ -47,11 +48,10 @@ describe('PrismaTweetRepository', () => {
     const tweet = aTweet().withAuthorId('alice').build()
     await repository.save(tweet)
 
-    const updated = tweet.withContent('Contenu mis à jour')
-    await repository.update(updated)
+    await repository.update(tweet.withContent(new Message('Contenu mis à jour')))
 
-    const found = await repository.findById(tweet.getTweetId())
-    expect(found!.getMessage()).toBe('Contenu mis à jour')
+    const found = await repository.findById(tweet.id)
+    expect(found!.content).toBe('Contenu mis à jour')
   })
 
   it('retourne tous les tweets', async () => {

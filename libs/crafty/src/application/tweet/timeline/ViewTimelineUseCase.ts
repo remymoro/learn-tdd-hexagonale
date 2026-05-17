@@ -14,9 +14,9 @@ export class ViewTimelineUseCase {
       : await this.tweetRepository.getAllTweets()
 
     return tweets.map(tweet => ({
-      id: tweet.getTweetId(),
-      content: tweet.getMessage(),
-      authorId: tweet.getAuthorId(),
+      id: tweet.id,
+      content: tweet.content,
+      authorId: tweet.authorId,
     }))
   }
 }

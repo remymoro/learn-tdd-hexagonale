@@ -10,24 +10,23 @@ type ViewWallQuery = {
 export class ViewWallUseCase {
   constructor(
     private readonly tweetRepository: TweetRepository,
-    private readonly followRepository: FollowRepository
+    private readonly followRepository: FollowRepository,
   ) {}
 
   async execute(query: ViewWallQuery): Promise<ViewWallResponse[]> {
     const userId = new UserId(query.userId)
     const followedUserIds = await this.followRepository.findFollowedUserIds(userId)
 
-    if (followedUserIds.length === 0) {
-      return []
-    }
+    if (followedUserIds.length === 0) return []
 
-    const followedIds = followedUserIds.map(id => id.value)
-    const tweets = await this.tweetRepository.findPublishedTweetsByAuthors(followedIds)
+    const tweets = await this.tweetRepository.findPublishedTweetsByAuthors(
+      followedUserIds.map(id => id.value),
+    )
 
     return tweets.map(tweet => ({
-      id: tweet.getTweetId(),
-      content: tweet.getMessage(),
-      authorId: tweet.getAuthorId(),
+      id: tweet.id,
+      content: tweet.content,
+      authorId: tweet.authorId,
     }))
   }
 }
