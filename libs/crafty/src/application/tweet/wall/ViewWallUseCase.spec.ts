@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
 import { ViewWallUseCase } from './ViewWallUseCase'
-import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository'
-import { InMemoryTweetRepository } from '@infrastructure/InMemoryTweetRepository'
+import { InMemoryFollowRepository } from '@tests/InMemoryFollowRepository'
+import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository'
 import { aTweet } from '../../../tests/builders/tweetBuilder'
 
 describe('ViewWallUseCase', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
-import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository'
+import { InMemoryFollowRepository } from '@tests/InMemoryFollowRepository'
 import { UserAlreadyFollowsError } from '@domain/user/UserErrors'
 
 describe('FollowUserUseCase', () => {

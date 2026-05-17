@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { PublishTweetUseCase } from '@application/tweet/publish/PublishTweetUseCase'
 import { FollowUserUseCase } from '@application/user/FollowUserUseCase'
 import { ViewWallUseCase } from './ViewWallUseCase'
-import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository'
-import { InMemoryTweetRepository } from '@infrastructure/InMemoryTweetRepository'
+import { InMemoryFollowRepository } from '@tests/InMemoryFollowRepository'
+import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository'
 
 describe('ViewWallUseCase integration', () => {
   it('should display tweets published by followed users', async () => {

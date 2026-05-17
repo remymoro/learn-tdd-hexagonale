@@ -3,8 +3,8 @@ import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ApiModule } from '../src/api.module';
-import { InMemoryTweetRepository } from '@infrastructure/InMemoryTweetRepository';
-import { InMemoryFollowRepository } from '@infrastructure/InMemoryFollowRepository';
+import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository';
+import { InMemoryFollowRepository } from '@tests/InMemoryFollowRepository';
 import { TWEET_REPOSITORY, FOLLOW_REPOSITORY, CLOCK } from '@crafty/crafty/crafty.tokens';
 import { type Clock } from '@crafty/crafty/shared/Clock';
 

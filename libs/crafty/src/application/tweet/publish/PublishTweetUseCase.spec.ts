@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { InMemoryTweetRepository } from '@infrastructure/InMemoryTweetRepository';
+import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository';
 import { PublishTweetUseCase } from './PublishTweetUseCase';
 
 describe('PublishTweetUseCase', () => {
