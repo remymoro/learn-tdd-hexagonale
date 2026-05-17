@@ -1,7 +1,7 @@
 import { ClassProvider, DynamicModule, Module } from '@nestjs/common';
 import { TweetRepository } from '@application/ports/TweetRepository';
 import { FollowRepository } from '@application/ports/FollowRepository';
-import { Clock } from '@shared/Clock';
+import { Clock } from '@application/ports/Clock';
 import { PublishTweetUseCase } from '@application/tweet/publish/PublishTweetUseCase';
 import { ViewTimelineUseCase } from '@application/tweet/timeline/ViewTimelineUseCase';
 import { UpdateTweetUseCase } from '@application/tweet/update/UpdateTweetUseCase';

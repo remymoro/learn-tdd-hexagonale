@@ -1,7 +1,7 @@
 import { TweetRepository } from '@application/ports/TweetRepository'
 import { TweetAlreadyDeletedError, TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors'
 import { Result, ok, err } from '@shared/Result'
-import { Clock, SystemClock } from '@shared/Clock'
+import { Clock } from '@application/ports/Clock'
 
 type DeleteTweetCommand = {
   id: string
@@ -11,7 +11,7 @@ type DeleteTweetCommand = {
 export class DeleteTweetUseCase {
   constructor(
     private tweetRepository: TweetRepository,
-    private clock: Clock = SystemClock,
+    private clock: Clock,
   ) {}
 
   async execute(command: DeleteTweetCommand): Promise<Result<void, TweetNotFoundError | TweetAlreadyDeletedError | UnauthorizedError>> {

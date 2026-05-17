@@ -5,7 +5,7 @@ import { Message } from '@domain/tweet/Message'
 import { AuthorId } from '@domain/tweet/AuthorId'
 import { TweetRepository } from '@application/ports/TweetRepository'
 import { TweetAlreadyDeletedError, TweetNotFoundError, UnauthorizedError } from '@domain/tweet/TweetErrors'
-import { Clock } from '@shared/Clock'
+import { Clock } from '@application/ports/Clock'
 
 const fixedDate = new Date('2026-05-16T17:00:00.000Z')
 const fakeClock: Clock = { now: () => fixedDate }

@@ -5,8 +5,8 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { ApiModule } from '../src/api.module';
 import { InMemoryTweetRepository } from '@tests/InMemoryTweetRepository';
 import { InMemoryFollowRepository } from '@tests/InMemoryFollowRepository';
-import { TWEET_REPOSITORY, FOLLOW_REPOSITORY, CLOCK } from '@crafty/crafty/crafty.tokens';
-import { type Clock } from '@crafty/crafty/shared/Clock';
+import { TWEET_REPOSITORY, FOLLOW_REPOSITORY, CLOCK } from '../src/crafty.tokens';
+import { type Clock } from '@application/ports/Clock';
 
 class FakeClock implements Clock {
   now(): Date {
