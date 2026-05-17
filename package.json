@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:api":        "tsx apps/api/src/main.ts",
-    "start:api:dev":    "tsx --watch apps/api/src/main.ts",
-    "start:cli":        "tsx apps/cli/src/main.ts",
-    "test":             "vitest run",
-    "test:watch":       "vitest",
-    "test:integration": "vitest run --reporter=verbose libs/crafty/src/infrastructure/*.integration.spec.ts"
+    "start:api": "tsx apps/api/src/main.ts",
+    "start:api:dev": "tsx --watch apps/api/src/main.ts",
+    "start:cli": "tsx apps/cli/src/main.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --reporter=verbose libs/crafty/src/infrastructure/*.integration.spec.ts",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts --reporter=verbose"
   },
   "bin": {
     "twitter-cli": "./dist/cli.cjs"
@@ -20,6 +21,7 @@
   "type": "module",
   "devDependencies": {
     "@nestjs/cli": "^11.0.21",
+    "@nestjs/testing": "^11.1.21",
     "@testcontainers/postgresql": "^11.14.0",
     "@types/node": "^25.8.0",
     "@types/pg": "^8.20.0",
